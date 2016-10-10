@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Minitracer</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <!-- Estilos propios-->
+    <link href="../../../web/css/styles_minitracer.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="../bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="../dist/css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../bower_components/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+     <script   src="../js/jquery-2.1.1.min.js"   integrity="sha256-h0cGsrExGgcZtSZ/fRz4AwV+Nn6Urh/3v3jFRQ0w9dQ="   crossorigin="anonymous"></script>
+           
+    <script src="../../PapaParse/papaparse.min.js"></script>
+    
+    <script>
+      var datos;
+ 
+      function handleFileSelect(evt) {
+      var file = evt.target.files[0];
+      
+      Papa.parse(file, {
+      delimiter: ",",
+      header: false,
+      dynamicTyping: true,
+      complete: function(results) {
+      datos = results.data;
+      }
+      });
+      }
+      
+      $(document).ready(function(){
+      $("#csv-file").change(handleFileSelect);
+      });
+    </script>
+   
+         <!-- Funciones propias -->
+    <script src="../../../web/js/import.js" type="text/javascript"></script>
+    <script src="../../../web/js/export.js" type="text/javascript"></script>
+    <script src="../../../web/js/menu.js" type="text/javascript"></script>
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <div id="inicio">
+    <!-- @Req Seleccion_addReq_genReport 
+    -->
+	  <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+		  <div class="navbar-header">
+		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			  <span class="sr-only">Toggle navigation</span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand">minitracer - Minimalist Requiremnts Tracer</a>
+		  </div>
+		  <!-- /.navbar-header -->
+	      </nav>
+
+	  <div class="container">
+	      <div class="row">
+		  <div class="col-md-6 col-md-offset-3">
+		      <div class="login-panel panel panel-default">
+			  <div class="panel-heading">
+			      <h3 class="panel-title">Select an Input File</h3>
+			  </div>
+			  <div class="panel-body">
+			      <form role="form">
+				  <fieldset>
+				      <div class="form-group">
+					  <div class="input-file-propio">
+						<input type="file" id="csv-file" name="files"/>
+					  </div>
+				      </div>
+				      <!-- Change this to a button or input when using this as a form -->
+				      <a href="#paginas" class="btn btn-lg btn-success btn-block" onclick="import_data(datos)">Generate Report</a>
+				      <p class="p-or">or</p>
+				      <a href="#add_req" class="btn btn-lg btn-success btn-block" onclick="muestra_add_req()">Add New Requiremnts</a>
+				  </fieldset>
+			      </form>
+			  </div>
+		      </div>
+		  </div>
+	      </div>
+	  </div>
+    </div> <!-- Inicio -->
+    
+    <div id="paginas">
+	  <div id="wrapper">
+
+		  <!-- Navigation -->
+	    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+	    <!-- @Req Menu_web
+	    -->
+		  <div class="navbar-header">
+		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			  <span class="sr-only">Toggle navigation</span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand">minitracer - Minimalist Requiremnts Tracer</a>
+		  </div>
+		  <!-- /.navbar-header -->
+
+		  <div class="navbar-default sidebar" role="navigation">
+		      <div class="sidebar-nav navbar-collapse">
+			  <ul class="nav" id="side-menu">
+			      <li>
+				  <a href="#"><i class="fa fa-list-ul fa-fw"></i> Menu<span class="fa arrow"></span></a>
+				  <ul class="nav collapse in">
+				      <li>
+					  <a href="#" onclick="muestra_summary()"><i class="fa fa-dashboard fa-fw"></i> Status Summary</a>
+				      </li>
+				      <li>
+					  <a href="#"> <i class="fa fa-bar-chart-o fa-fw"></i> Detailed Status <span class="fa arrow"></span></a>
+					  <ul class="nav nav-second-level collapse-in">
+					      <li>
+						  <a href="#st_detailed_req" onclick="muestra_detail_req()" > Detailed Requirement Status </a>
+					      </li>
+					      <li>
+						  <a href="#st_descrip_req" onclick="muestra_descript_req()" > Requirements Description </a>
+					      </li>
+					      <li>
+						  <a href="#st_detailed_test" onclick="muestra_detail_test()"> Detailed Test Status </a>
+					      </li>
+					      <li>
+						  <a href="#st_detailed_files" onclick="muestra_detail_files()"> Tracing Files</a>
+					      </li>
+					      <li>
+						  <a href="#st_detailed_file_csv" onclick="muestra_detail_files_csv()"> CSV Files</a>
+					      </li>
+					  </ul>
+					  <!-- /.nav-second-level -->
+				      </li>
+				      <li>
+					  <a href="#"> <i class="fa fa-th fa-fw"></i> Traceability Matrix <span class="fa arrow"></span></a>
+					  <ul class="nav nav-second-level collapse-in">
+					      <li>
+						  <a href="#mat_te_re" onclick="muestra_mat_te_re()"> Verification Matrix</a>
+					      </li>
+					      <li>
+						  <a href="#mat_re_pa" onclick="muestra_mat_re_pa()"> Traceability Matrix</a>
+					      </li>
+					  </ul>
+					  <!-- /.nav-second-level -->
+				      </li>
+				      <li>
+					  <a href="#add_req" onclick="muestra_add_req()"><i class="fa fa-edit fa-fw"></i> Add Requirements</a>
+				      </li>
+				  </ul>
+			      </li>
+			  </ul>
+		      </div>
+		      <!-- /.sidebar-collapse -->
+		  </div>
+		  <!-- /.navbar-static-side -->
+	      </nav>
+	      <div id="st_summary">
+		  <div id="page-wrapper">
+		      <div class="row">
+			  <div class="col-lg-12">
+			      <div id=name_project0>
+			      </div>
+			      <h1>Status Summary</h1> </br>
+			  </div>
+			  <!-- /.col-lg-12 -->
+		      </div>
+		      <!-- /.row -->
+		      <div class="row">
+		      <!-- @Req Resumen_contenido
+		      -->
+			  <div class="col-lg-3 col-md-6">
+			      <div class="panel panel-primary">
+				  <div class="panel-heading">
+				      <div class="row">
+					  <div class="col-xs-3">
+					      <i class="fa fa-edit fa-5x"></i>
+					  </div>
+					  <div class="col-xs-9 text-right" id="number_req">
+					      
+					  </div>
+				      </div>
+				  </div>
+				  <a href="#">
+				      <div class="panel-footer">
+					  <a href="#st_detailed_req" onclick="muestra_detail_req()" ><span class="pull-left">View Details</span>
+					  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+					  <div class="clearfix"></div></a>
+				      </div>
+				  </a>
+			      </div>
+			  </div>
+			  <div class="col-lg-3 col-md-6">
+			      <div class="panel panel-green">
+				  <div class="panel-heading">
+				      <div class="row">
+					  <div class="col-xs-3">
+					      <i class="fa fa-tasks fa-5x"></i>
+					  </div>
+					  <div class="col-xs-9 text-right" id="number_test">
+					      
+					  </div>
+				      </div>
+				  </div>
+				  <a href="#">
+				      <div class="panel-footer">
+					  <a href="#st_detailed_test" onclick="muestra_detail_test()"><span class="pull-left">View Details</span>
+					  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+					  <div class="clearfix"></div></a>
+				      </div>
+				  </a>
+			      </div>
+			  </div>
+			  <div class="col-lg-3 col-md-6">
+			      <div class="panel panel-yellow">
+				  <div class="panel-heading">
+				      <div class="row">
+					  <div class="col-xs-3">
+					      <i class="fa fa-file-code-o fa-5x"></i>
+					  </div>
+					  <div class="col-xs-9 text-right" id="number_src">
+					      
+					  </div>
+				      </div>
+				  </div>
+				  <a href="#">
+				      <div class="panel-footer">
+					  <a href="#st_detailed_files" onclick="muestra_detail_files()"><span class="pull-left">View Details</span>
+					  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+					  <div class="clearfix"></div></a>
+				      </div>
+				  </a>
+			      </div>
+			  </div>
+			  <div class="col-lg-3 col-md-6">
+			      <div class="panel panel-red">
+				  <div class="panel-heading">
+				      <div class="row">
+					  <div class="col-xs-3">
+					      <i class="fa fa-file-excel-o fa-5x"></i>
+					  </div>
+					  <div class="col-xs-9 text-right" id="number_csv">
+					      
+					  </div>
+				      </div>
+				  </div>
+				  <a href="#">
+				      <div class="panel-footer">
+					  <a href="#st_detailed_file_csv" onclick="muestra_detail_files_csv()"><span class="pull-left">View Details</span>
+					  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+					  <div class="clearfix"></div></a>
+				      </div>
+				  </a>
+			      </div>
+			  </div>
+		      </div>
+		      <!-- /.row -->
+		      <br/>
+		      <div class="row">
+			  <div>
+			  <!-- @Req Barras_progreso 
+			  -->
+			      <div id="global_state">
+				 
+				  
+			      </div>
+			      <div id="implementation_state">
+				  
+				  
+			      </div>
+			      <div id="test_state">
+				  
+				  
+			      </div>
+			  </div>
+			  <!-- barras progresion-->
+		      </div>
+		      <!-- /.row -->
+		  </div>
+		  <!-- /#page-wrapper -->
+	      </div> <!-- summary -->
+	      <div id="st_detailed_req">
+		  <div id="page-wrapper">
+			      <div class="row">
+				  <div class="col-lg-12">
+				  <!-- @Req Detalle_req
+				  -->
+				      <h1 class="page-header">Detailed Requirement Status </h1>
+				  </div>
+				  <!-- /.col-lg-12 -->
+			      </div>
+			      <!-- /.row -->
+			      <div class="row">
+				  <div class="col-lg-12">
+				      <div class="panel panel-default">
+					  <div class="panel-heading" id="name_project1">
+					    
+					  </div>
+					  <!-- /.panel-heading -->
+					  <div class="panel-body" id="tabla_req">
+					      
+					      <!-- /.table-responsive -->
+					      
+					  </div>
+					  <!-- /.panel-body -->
+				      </div>
+				      <!-- /.panel -->
+				  </div>
+				  <!-- /.col-lg-12 -->
+			      </div>
+			      <!-- /.row -->
+			      
+			  </div>
+			  <!-- /#page-wrapper -->
+		    </div> <!-- st_detailed_req -->
+	      <div id="st_descript_req">
+		  <div id="page-wrapper">
+			      <div class="row">
+				  <div class="col-lg-12">
+				  <!-- @Req Detalle_req
+				  -->
+				      <h1 class="page-header">Requirements Description </h1>
+				  </div>
+				  <!-- /.col-lg-12 -->
+			      </div>
+			      <!-- /.row -->
+			      <div class="row">
+				  <div class="col-lg-12">
+				      <div class="panel panel-default">
+					  <div class="panel-heading" id="name_project5">
+					    
+					  </div>
+					  <!-- /.panel-heading -->
+					  <div class="panel-body" id="tabla_req_description">
+					      
+					      <!-- /.table-responsive -->
+					      
+					  </div>
+					  <!-- /.panel-body -->
+				      </div>
+				      <!-- /.panel -->
+				  </div>
+				  <!-- /.col-lg-12 -->
+			      </div>
+			      <!-- /.row -->
+			      
+			  </div>
+			  <!-- /#page-wrapper -->
+		    </div> <!-- st_descript_req -->
+
+	      <div id="st_detailed_test">
+		  <div id="page-wrapper">
+			<div class="row">
+			    <div class="col-lg-12">
+			    <!-- @Req Detalle_test
+				  -->
+				<h1 class="page-header">Detailed Test Status </h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-default">
+				    <div class="panel-heading"  id="name_project2">
+
+				    </div>
+				    <!-- /.panel-heading -->
+				    <div class="panel-body" id="tabla_test">
+					
+					<!-- /.table-responsive -->
+					
+				    </div>
+				    <!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			
+		    </div>
+		    <!-- /#page-wrapper -->
+	      </div>
+	      <div id="st_detailed_files">
+		  <div id="page-wrapper">
+			<div class="row">
+			    <div class="col-lg-12">
+			     <!-- @Req Detalle_files
+				  -->
+				<h1 class="page-header">Tracing Files</h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-default">
+				    <div class="panel-heading"  id="name_project3">
+				     
+				    </div>
+				    <!-- /.panel-heading -->
+				    <div class="panel-body" id="tabla_files">
+				    </div>
+				    <!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		    </div>
+		    <!-- /#page-wrapper -->
+	      </div>
+	      <div id="st_detailed_file_csv">
+		  <div id="page-wrapper">
+			<div class="row">
+			    <div class="col-lg-12">
+			     <!-- @Req Detalle_files
+				  -->
+				<h1 class="page-header">CSV Files</h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-default">
+				    <div class="panel-heading"  id="name_project4">
+				     
+				    </div>
+				    <!-- /.panel-heading -->
+				    <div class="panel-body" id="tabla_files_csv">
+				    </div>
+				    <!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		    </div>
+		    <!-- /#page-wrapper -->
+	      </div>
+	      <div id="mat_te_re">
+		    <div id="page-wrapper">
+			<div class="row">
+			    <div class="col-lg-12">
+			    <!-- @Req Genera_matrices_web
+			    -->
+				<h1 class="page-header">Verification Matrix</h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-default" id="rete">
+				    <!-- /.panel-heading -->
+				    
+				    <!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		    </div>
+		    <!-- /#page-wrapper -->	    
+	      </div>
+	      <div id="mat_re_pa">
+		    <div id="page-wrapper">
+		      <div class="row">
+			    <div class="col-lg-12">
+				<h1 class="page-header">Traceability Matrix</h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-default" id="repa">
+				    
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		    </div>
+		    <!-- /#page-wrapper -->	    
+	      </div>
+	      <div id="add_req">
+		    <div id="page-wrapper">
+			<div class="row">
+			    <div class="col-lg-12">
+				<h1 class="page-header">Add Requirements</h1>
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+				<div class="panel panel-primary">
+				    <div class="panel-heading">
+					<div class="panel-primary-propio-header">PROJECT NAME</div> <input type="text" name="project_name" size="50" id="nombre_proyecto" class="formulario_titulo"/> 
+				    </div>
+				    <div class="panel-body outer">
+					<div class="row inner">
+					    <div class="col-lg-6">
+					    
+						<form role="form">
+						      <table id="tabla_req_add">
+							  <tr> <th class="panel-primary-propio-body">LABEL</th> <th class="panel-primary-propio-body">TYPE</th> 
+								<th class="panel-primary-propio-body">PARAMETER</th> <th class="panel-primary-propio-body">DESCRIPTION</th> 
+								<th class="panel-primary-propio-body">TEST</th> </tr>
+							  
+							  <tr> <td> <input type="text" name="etiqueta" class="formulario"/> </td> 
+								  <td> <select name="tipo" class="formulario" >
+										  <option value="deault" selected>Select</option>
+										  <option value="Ctest">Ctest</option>
+									    </select>
+								  </td> 
+								  <td> <input type="text" name="parametro" class="formulario" /> </td> 
+								  <td> <input type="text" name="descripcion" size="51" class="formulario" /> </td> 
+								  <td> <input type="text" name="lista_test" class="formulario" /> </td>  
+							  </tr>
+							  <tr> <td> <input type="text" name="etiqueta" class="formulario" /> </td> 
+								  <td> <select name="tipo" class="formulario" >
+										  <option value="defaut" selected>Select</option>
+										  <option value="Ctest">Ctest</option>
+									    </select>
+								  </td> 
+								  <td> <input type="text" name="parametro" class="formulario" /> </td> 
+								  <td> <input type="text" name="descripcion" size="51" class="formulario" /> </td> 
+								  <td> <input type="text" name="lista_test" class="formulario" /> </td>  
+							  </tr>
+										  <tr> <td> <input type="text" name="etiqueta" class="formulario" /> </td> 
+								  <td> <select name="tipo" class="formulario" >
+										  <option value="default" selected>Select</option>
+										  <option value="Ctest">Ctest</option>
+									    </select>
+								  </td> 
+								  <td> <input type="text" name="parametro" class="formulario" /> </td> 
+								  <td> <input type="text" name="descripcion" size="51" class="formulario" /> </td> 
+								  <td> <input type="text" name="lista_test" class="formulario"/> </td>  
+							  </tr>
+						      </table>
+						</form>
+						</br>
+					    </div>
+					  <!-- /.col-lg-6 (nested) -->
+					  
+					</div>
+					<!-- /.row (nested) -->
+				    </div>
+				    <!-- /.panel-body -->
+				    <div class="panel-footer">
+				  
+					  <button  type="button" onclick="add_req()" class="btn btn-default-propio" >Add Requirement</button>  
+					  <button  type="submit" onclick="export_csv()" class="btn btn-default-propio" >Export to CSV</button>
+					  
+						  
+				    </div>
+				    <!-- ./panel-footer -->
+				</div>
+				<!-- /.panel -->
+			    </div>
+			    <!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		    </div>
+		    <!-- /#page-wrapper -->	    
+	      </div>
+	  </div>
+	  <!-- /#wrapper -->
+    </div>
+<!-- jQuery -->
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    
+    <!-- DataTables JavaScript -->
+    <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+    
+    <!-- Morris Charts JavaScript -->
+    <script src="../bower_components/raphael/raphael-min.js"></script>
+    <script src="../bower_components/morrisjs/morris.min.js"></script>
+    <script src="../js/morris-data.js"></script>
+    
+
+
+    
+</body>
+
+</html>

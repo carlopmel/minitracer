@@ -1,0 +1,136 @@
+.panel-primary-propio-header{
+    text-align : center;
+    font-weight : bold;
+    font-size : 20px;
+		     
+} 
+.panel-primary-propio-body{
+    text-align : center
+}
+
+.formulario{
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 6px 12px;
+    height: 34px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.formulario_titulo{
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 6px 12px;
+    height: 34px;
+    font-size: 15px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    font-weight : bold;
+    margin-left : 28.5%;
+    text-align : center;
+}
+
+.btn-default-propio{
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    margin-left: 22%;
+    font-weight : bold
+}
+
+.input-file-propio{
+    margin-left : 16%
+}
+
+.p-or{
+    text-align : center;
+    margin: 15px;
+}
+
+#st_summary{
+  display : block;
+}
+
+#st_detailed_req{
+  display : none;
+}
+
+#st_detailed_test{
+  display : none;
+}
+
+#st_detailed_files{
+  display : none;
+}
+
+#mat_te_re{
+  display : none;
+}
+
+#mat_re_pa{
+  display : none;
+}
+
+#add_req{
+  display : none;
+}
+
+#inicio{
+  display : block;
+}
+
+#paginas{
+  display : none;
+}
+
+.barra_roja{
+  background-color: #db0e0e;
+}
+
+.barra_roja_naran{
+  background-color : #ed5400;
+}
+
+.barra_naranja{
+  background-color: #ddc304;
+}
+
+.barra_naran_verde{
+  background-color: #a8db1d;
+}
+
+.outer {position:relative}
+.inner {
+  overflow-x:scroll;
+  overflow-y:visible;
+  
+}
+
+.celda_verde{
+    background-color: rgb(72, 207, 72);
+}
+
+.celda_naranja{
+    background-color: rgb(209, 155, 27);
+}
+
+.celda_roja{
+    background-color: rgb(207, 43, 43);
+}
+
+th{
+    text-align: center;
+}
+
+.celda_centrada{
+    text-align: center;
+}
